@@ -1,0 +1,229 @@
+{
+	"info": {
+		"name": "FIWARE DEMO",
+		"_postman_id": "749b3d24-fc65-1c9a-a752-959799bbc0d5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CREATE SENSOR",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"distance_sensor\",\n  \"type\": \"Sensor\",\n  \"distance\": {\n    \"value\": 36.3,\n    \"type\": \"Float\"\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:1026/v2/entities",
+					"host": [
+						"localhost"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "QUERY SENSOR",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "fiware-service",
+						"value": "fiware"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/fiware/things"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "localhost:1026/v2/entities/lamp1?type=Thing",
+					"host": [
+						"localhost"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"lamp1"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Thing",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE SENSOR",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"value": "fiware"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/fiware/things"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"status\": {\n    \"value\": \"on\",\n    \"type\": \"command\"\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:1026/v2/entities/lamp1/attrs",
+					"host": [
+						"localhost"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"lamp1",
+						"attrs"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SENSOR SUBS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"value": "fiware"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/fiware/things"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"A subscription to get info about Room1\",\n  \"subject\": {\n    \"entities\": [\n      {\n        \"id\": \"sensor_distance\",\n        \"type\": \"Thing\"\n      }\n    ],\n    \"condition\": {\n      \"attrs\": [\n        \"distance\"\n      ],\n      \"expression\": {\n    \t\"q\": \"distance>0\"\n      }\n    }\n  },\n  \"notification\": {\n    \"http\": {\n      \"url\": \"http://172.17.0.1:8989\"\n    },\n    \"attrs\": [\n      \"distance\"\n    ]\n  },\n  \"expires\": \"2040-01-01T14:00:00.00Z\",\n  \"throttling\": 1\n}"
+				},
+				"url": {
+					"raw": "localhost:1026/v2/subscriptions",
+					"host": [
+						"localhost"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"subscriptions"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "iot register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"value": "fiware"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/fiware/things"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"devices\":[\n      {\n         \"device_id\":\"sensor_distance\",\n         \"entity_name\":\"sensor_distance\",\n         \"entity_type\":\"Thing\",\n         \"protocol\":\"PDI-IoTA-UltraLight\",\n         \"transport\":\"HTTP\",\n         \"endpoint\":\"http://192.168.43.69\",\n         \"attributes\":[\n            {\n               \"name\":\"distance\",\n               \"type\":\"double\"\n            }\n         ]\n      },\n      {\n         \"device_id\":\"sensor_crash\",\n         \"entity_name\":\"sensor_crash\",\n         \"entity_type\":\"Thing\",\n         \"protocol\":\"PDI-IoTA-UltraLight\",\n         \"transport\":\"HTTP\",\n         \"endpoint\":\"http://192.168.43.69\",\n         \"attributes\":[\n            {\n               \"name\":\"crashed\",\n               \"type\":\"boolean\"\n            }\n         ]\n      },\n      {\n         \"device_id\":\"lamp1\",\n         \"entity_name\":\"lamp1\",\n         \"entity_type\":\"Thing\",\n         \"protocol\":\"PDI-IoTA-UltraLight\",\n         \"transport\":\"HTTP\",\n         \"endpoint\":\"http://192.168.43.69\",\n         \"attributes\":[\n            {\n               \"name\":\"turn\",\n               \"type\":\"boolean\"\n            }\n         ],\n         \"commands\":[\n            {\n               \"name\":\"status\",\n               \"type\":\"command\"\n            }\n         ]\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:4041/iot/devices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"devices"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "iot register service",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"value": "fiware"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/fiware/things"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"services\":[\n      {\n         \"apikey\":\"123456\",\n         \"cbroker\":\"http://orion:1026\",\n         \"entity_type\":\"Thing\",\n         \"resource\":\"/iot/d\"\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:4041/iot/services",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"services"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
